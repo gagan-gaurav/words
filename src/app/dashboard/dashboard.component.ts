@@ -54,7 +54,7 @@ export class DashboardComponent implements OnInit {
   }
 
   event() {
-    console.log('ad');
+    // console.log('ad');
     this.sidenav.toggle();
   }
   
@@ -92,8 +92,8 @@ export class DashboardComponent implements OnInit {
       for(const key in this.Leaders){
         this.Leaders[key].rank = this.count++;
       }
-      console.log("board:", this.Leaders);
-      console.log(Object.keys(this.data).length);
+      // console.log("board:", this.Leaders);
+      // console.log(Object.keys(this.data).length);
     });
   }
 

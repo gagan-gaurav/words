@@ -148,7 +148,7 @@ export class WordComponent {
     // lift the mouse first.
     this.mouse_hold = false;
 
-    console.log(this.Word);
+    // console.log(this.Word);
 
     if (this.Word.length !== 0) {
       //start the game timer.
@@ -160,9 +160,10 @@ export class WordComponent {
 
       // make the url;
       this.final_url = this.url_const + this.Word;
+
       //call async http req. to set the array_length from the json data.
 
-      console.log('sending', this.array_length);
+      // console.log('sending', this.array_length);
 
       const url: string = this.final_url;
       //check word from the dictonary.
@@ -173,13 +174,13 @@ export class WordComponent {
       await fetch(url, options)
         .then(response => response.json())
         .then((data) => {
-          console.log(data);
-          console.log(data.length);
+          // console.log(data);
+          // console.log(data.length);
           this.array_length = data.length;
         })
         .catch(err => console.error(err));
 
-      console.log('receiving', this.array_length);
+      // console.log('receiving', this.array_length);
 
       // check it the word formed is valid or not.
       if (this.array_length !== undefined && this.array_length !== 0) {
@@ -201,7 +202,7 @@ export class WordComponent {
           setTimeout(() => {
             this.score_updated = false;
           }, 1500);
-          console.log('score_updated', this.score_updated);
+          // console.log('score_updated', this.score_updated);
 
 
           //reset the current word.
@@ -256,7 +257,7 @@ export class WordComponent {
   }
 
   share(){
-    console.log('share score'); 
+    // console.log('share score'); 
   }
 
   show_help_menu: boolean = false;
@@ -312,7 +313,7 @@ export class WordComponent {
   // open navigation menu
   openNav() {
     this.open.emit(true);
-    console.log('nav');
+    // console.log('nav');
   }
 
   // takes  input from the form. player name.
@@ -320,10 +321,10 @@ export class WordComponent {
   // id number of player.
   id: number = 0;
   onSubmit(form_data: NgForm) {
-    console.log(form_data);
+    // console.log(form_data);
     this.player = form_data.value;
     form_data.resetForm();
-    console.log(this.player.user);
+    // console.log(this.player.user);
 
     onValue(this.refe, (snapshot) => {
       this.data = snapshot.val();
