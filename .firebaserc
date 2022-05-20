@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "word-game-39b93": {
+      "hosting": {
+        "words": [
+          "word-game-39b93"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "word-game-39b93"
+  }
+}

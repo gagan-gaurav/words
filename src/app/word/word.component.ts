@@ -1,4 +1,21 @@
 import { Component, EventEmitter, HostListener, Output } from '@angular/core';
+import { NgForm } from '@angular/forms';
+import { getDatabase, ref, set, onValue} from "firebase/database";
+import { initializeApp } from 'firebase/app';
+
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC30_Zg4eS-dDVl5FGRVfkrxnssEnjaM0k",
+  authDomain: "word-game-39b93.firebaseapp.com",
+  databaseURL: "https://word-game-39b93-default-rtdb.firebaseio.com",
+  projectId: "word-game-39b93",
+  storageBucket: "word-game-39b93.appspot.com",
+  messagingSenderId: "963132136684",
+  appId: "1:963132136684:web:0f48490164efd14c5659c9"
+};
+
+const app = initializeApp(firebaseConfig);
+const database = getDatabase(app);
 
 
 const WIDTH = 8;
@@ -51,6 +68,9 @@ export class WordComponent {
   right = states.RIGHT;
   wrong = states.WRONG;
 
+  refe = ref(database, 'leaderboard/'); // reference of the data.
+  data: any;  // data from the firebase.
+
   box_id: number = 0;
 
   mouse_hold: boolean = false;
@@ -63,7 +83,7 @@ export class WordComponent {
   game_score: number = 0;
   score_updated: boolean = false;
 
-  show_menu: boolean = false;
+  show_menu: boolean = false; // show this menu after game finishes.
   timer_running: boolean = false;
 
   // fetch here.
@@ -130,9 +150,16 @@ export class WordComponent {
     console.log(this.Word);
 
     if (this.Word.length !== 0) {
+      //start the game timer.
+      if(this.timer_running === false) {
+        this.timer_running = true;
+        this.start();
+      }
+
       // make the url;
       this.final_url = this.url_const + this.Word;
       //call async http req. to set the array_length from the json data.
+
       console.log('sending', this.array_length);
 
       const url: string = this.final_url;
@@ -218,12 +245,15 @@ export class WordComponent {
   }, 100);
 
   // // after pressing start on main_menu.
-  main_menu() {
+  start() {
     this.bar_length = 100;
     this.show_menu = false;
-    this.timer_running = true;
     this.game_score = 0;
     // this.startTimer();
+  }
+
+  share(){
+    console.log('share score'); 
   }
 
   show_help_menu: boolean = false;
@@ -248,36 +278,59 @@ export class WordComponent {
   /// Does't require this section.
 
   // time variables.
-  timer_id: any = null;
-  time: number = 10000;
-  initial_time: number = 0;
-  remaining_time: number = 1000 * 60;
+  // timer_id: any = null;
+  // time: number = 10000;
+  // initial_time: number = 0;
+  // remaining_time: number = 1000 * 60;
 
-  // pauser the timer.
-  pauseTimer() {
-    clearTimeout(this.timer_id);
-    console.log("timer paused");
-    this.timer_id = null;
-    this.remaining_time -= Date.now() - this.initial_time;
-  }
+  // // pauser the timer.
+  // pauseTimer() {
+  //   clearTimeout(this.timer_id);
+  //   console.log("timer paused");
+  //   this.timer_id = null;
+  //   this.remaining_time -= Date.now() - this.initial_time;
+  // }
 
-  // start the timer.
-  startTimer() {
-    if (this.timer_id) {
-      return;
-    }
+  // // start the timer.
+  // startTimer() {
+  //   if (this.timer_id) {
+  //     return;
+  //   }
 
-    this.initial_time = Date.now()
-    this.timer_id = setTimeout(() => {
-      this.show_menu = true;
-      this.timer_running = false;
-      console.log("TimesUp", Date.now() - this.initial_time);
-    }, this.remaining_time);
-  }
+  //   this.initial_time = Date.now()
+  //   this.timer_id = setTimeout(() => {
+  //     this.show_menu = true;
+  //     this.timer_running = false;
+  //     console.log("TimesUp", Date.now() - this.initial_time);
+  //   }, this.remaining_time);
+  // }
 
+
+  // open navigation menu
   openNav() {
     this.open.emit(true);
     console.log('nav');
+  }
+
+  // takes  input from the form. player name.
+  player: any;
+  // id number of player.
+  id: number = 0;
+  onSubmit(form_data: NgForm) {
+    console.log(form_data);
+    this.player = form_data.value;
+    form_data.resetForm();
+    console.log(this.player.user);
+
+    onValue(this.refe, (snapshot) => {
+      this.data = snapshot.val();
+      this.id = Object.keys(this.data).length + 1; // id = firebase_size + 1;
+    });
+
+    set(ref(database, 'leaderboard/' + this.id), {
+      player_name: this.player.user,
+      score: this.game_score
+    });
   }
 
 }

@@ -26,7 +26,14 @@
 
 	<div class="info-dialog-container" [class.show]="show_menu">
 		<div class="info-dialog" [class.show]="show_menu">
-			<button (click)="main_menu()"> Start </button>
+			<!-- <button (click)="share()"> Share </button> -->
+			<div class = "formdiv"> 
+				<form #form="ngForm" (submit)="onSubmit(form)">
+					<input type="text" ngModel name ="user" placeholder="Your name ...">
+					<button type="submit"> Submit score</button>
+				</form>
+			</div>
+			<button (click)="start()"> Replay </button>
 		</div>
 	</div>
 

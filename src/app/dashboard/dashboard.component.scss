@@ -24,11 +24,38 @@
 			
 			.box{
 				width: 98%;
-				background-color: lightgoldenrodyellow;
+				background-color: white;
 				border-radius: 10px;
 				border: 2px solid #888;
 				height: 99%;
 				border-radius: 10px;
+				flex-direction: column;
+				overflow-y: auto;
+
+				.heading{
+					background-color: lightgoldenrodyellow;
+					font-size: 18px;
+					font-weight: bold;
+					font-family: 'Courier New', Courier, monospace;
+					border: 2px solid #ddd;
+					border-radius: 8px;
+					padding: 10px;
+					margin: 2px 2px;
+					margin-bottom: 10px;
+					text-align: center;
+					text-transform: uppercase;
+				}
+					
+				.user{
+					background-color: lightgoldenrodyellow;
+					font-size: 18px;
+					font-weight: bold;
+					font-family: 'Courier New', Courier, monospace;
+					border: 2px solid #ddd;
+					border-radius: 8px;
+					padding: 10px;
+					margin: 6px 6px;
+				}
 			}
 		
 		}
