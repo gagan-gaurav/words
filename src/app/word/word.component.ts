@@ -85,6 +85,7 @@ export class WordComponent {
 
   show_menu: boolean = false; // show this menu after game finishes.
   timer_running: boolean = false;
+  attempted_first_word: boolean = false;
 
   // fetch here.
 
@@ -154,6 +155,7 @@ export class WordComponent {
       if(this.timer_running === false) {
         this.timer_running = true;
         this.start();
+        this.attempted_first_word = true;
       }
 
       // make the url;
@@ -244,11 +246,12 @@ export class WordComponent {
     }
   }, 100);
 
-  // // after pressing start on main_menu.
+  // // after pressing replay on main_menu or by attempting to make a word.
   start() {
     this.bar_length = 100;
     this.show_menu = false;
     this.game_score = 0;
+    this.attempted_first_word = false;
     // this.startTimer();
   }
 
@@ -268,7 +271,7 @@ export class WordComponent {
   // resume the game.
   resume() {
     this.show_help_menu = false;
-    this.timer_running = true;
+    if(this.attempted_first_word === true) this.timer_running = true;
     // this.startTimer();
   }
 
@@ -331,6 +334,8 @@ export class WordComponent {
       player_name: this.player.user,
       score: this.game_score
     });
+
+    this.start(); // after submit reset the game.
   }
 
 }
