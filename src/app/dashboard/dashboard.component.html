@@ -1,11 +1,15 @@
-<mat-sidenav-container class="example-container">
-	<mat-sidenav #sidenav [mode]="'over'">
-		<div style="width: 300px;background-color: rgb(123, 82, 28); height: 100%;">
-
+<mat-sidenav-container class="nav-container">
+	<mat-sidenav #sidenav [mode]="'over'" class = "navdiv">
+		<div class = "nav">
+			<div class = "box">
+				
+			</div>
 		</div>
 	</mat-sidenav>
 
 	<mat-sidenav-content>
-		<app-word (open)="event()"></app-word>
+		<div class = "home">
+			<app-word (open)="event()"></app-word>
+		</div>
 	</mat-sidenav-content>
 </mat-sidenav-container>

@@ -1,5 +1,6 @@
 .container{
-	height: 98vh;
+	height: 99vh;
+	width: 99vw;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -12,22 +13,36 @@
 		height: 54px;
 		display: flex;
 		align-items: center;
-		justify-content: center;
+		justify-content: space-between;
 		text-transform: uppercase;
 		font-size: 24px;
 		font-weight: bold;
 		border-bottom: 1px solid #ddd;
 		font-family: 'Courier New', Courier, monospace;
 
+		img{
+			width: 30px;
+			height: 30px;
+			padding: 4px;
+			border: 2px solid #888;
+			border-radius: 8px;
+			margin-left: 8px;
+			// margin-top: 5px;
+			background-color: lightgoldenrodyellow;
+			cursor: pointer;
+		}
+
 		button{
-			margin-left: 10px;
+			margin-right: 8px;
+			width: 30px;
+			height: 30px; 
 			background-color: lightgoldenrodyellow;
 			align-self: center;
 			color: black;
 			font-weight: bold;
 			font-size: 18px;
-			padding: 3px 6px;
-			border-radius: 4px;
+			padding: 4px;
+			border-radius: 8px;
 			border: 2px solid #888;
 			cursor: pointer;
 			font-family: 'Courier New', Courier, monospace;
