@@ -74,7 +74,7 @@ export class WordComponent {
 
   constructor() {
     // show the main menu
-    this.show_menu = true;
+    // this.show_menu = true;
     //make the grid.
     for (let i = 0; i < HEIGHT; i++) {
       const column: box[] = [];
@@ -277,6 +277,7 @@ export class WordComponent {
 
   openNav() {
     this.open.emit(true);
+    console.log('nav');
   }
 
 }

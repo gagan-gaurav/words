@@ -17,7 +17,8 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  event($event: any) {
+  event() {
+    console.log('ad');
     this.sidenav.toggle();
   }
 
