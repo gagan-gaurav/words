@@ -1,7 +1,8 @@
-import { Component, EventEmitter, HostListener, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Output, Inject } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { getDatabase, ref, set, onValue} from "firebase/database";
 import { initializeApp } from 'firebase/app';
+import { DOCUMENT } from '@angular/common';
 
 
 const firebaseConfig = {
@@ -93,7 +94,13 @@ export class WordComponent {
   url_const: string = 'https://api.dictionaryapi.dev/api/v2/entries/en/';
   final_url: string = '';
 
-  constructor() {
+
+  mobile_type: boolean = false;
+  desktop_type: boolean = false;
+
+  constructor(@Inject(DOCUMENT) private document: any) {
+    // check device type
+    this.checkDeviceType();
     // show the main menu
     // this.show_menu = true;
     //make the grid.
@@ -136,7 +143,7 @@ export class WordComponent {
 
   // listen to the mouseclick is pressed.
   @HostListener('document:mousedown', ['$event'])
-  onMouseDown(event: MouseEvent) {
+  onMouseDown() {
     // console.log(this.mouse_hold);
     this.mouse_hold = true;
     if (this.currentX != -1 || this.currentY != -1) this.mymethod_over(this.currentX, this.currentY);
@@ -144,7 +151,7 @@ export class WordComponent {
 
   // listen to when click is left.
   @HostListener('document:mouseup', ['$event'])
-  async onMouseUp(event: MouseEvent) {
+  async onMouseUp() {
     // lift the mouse first.
     this.mouse_hold = false;
 
@@ -227,12 +234,6 @@ export class WordComponent {
     }
   }
 
-  //for touch screen
-  // touch_over(x: number, y: number){
-  //   console.log(x, y);
-  // }
-
-
   // change the lenght of time bar according to time.
   bar_length: number = 100;
   start_time = setInterval(() => {
@@ -279,7 +280,7 @@ export class WordComponent {
 
 
 
-  /// Does't require this section.
+  /// Doesn't require this section.
 
   // time variables.
   // timer_id: any = null;
@@ -337,6 +338,56 @@ export class WordComponent {
     });
 
     this.start(); // after submit reset the game.
+  }
+
+
+
+  // for touch screen and mobile devises.
+
+  @HostListener('touchstart', ['$event'])
+  touchstart(event: TouchEvent) {
+    this.onMouseDown();
+    // event.preventDefault();
+  }
+
+  preId: string = '';
+  @HostListener('touchmove', ['$event'])
+  touchmove(event: TouchEvent) {
+    // console.log("end", event.touches[0]);
+    let curId: string = this.document.elementsFromPoint(event.touches[0].clientX, event.touches[0].clientY)[0].id;
+    let cord: string[] = curId.split(',');
+    // console.log(cord);
+    if(curId.length !== 0  && this.preId !== curId)this.mymethod_over(parseInt(cord[0]), parseInt(cord[1]));
+    else {this.mymethod_out(parseInt(cord[0]), parseInt(cord[1]))};
+    this.preId = curId;
+    event.preventDefault();
+    
+    // console.log("work:",this.document.elementsFromPoint(event.touches[0].clientX, event.touches[0].clientY)[0].id);
+  }
+
+  @HostListener('touchend', ['$event'])
+  touchend(event: TouchEvent) {
+    this.onMouseUp();
+    // event.preventDefault();
+  }
+
+
+
+  // doesnot need this.
+  checkDeviceType(){
+    var ua = navigator.userAgent;
+
+    if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(ua)){
+      //  console.log('a.mobile-other');
+      this.mobile_type = true;
+    }
+    // else if(/Chrome/i.test(ua))
+      // console.log('chrome');
+
+    else{
+      this.desktop_type = true;
+      // console.log('desktop');
+    }
   }
 
 }
