@@ -3,6 +3,7 @@ import { NgForm } from '@angular/forms';
 import { getDatabase, ref, set, onValue} from "firebase/database";
 import { initializeApp } from 'firebase/app';
 import { DOCUMENT } from '@angular/common';
+import { word_list } from './word_list';
 
 
 const firebaseConfig = {
@@ -149,90 +150,93 @@ export class WordComponent {
     if (this.currentX != -1 || this.currentY != -1) this.mymethod_over(this.currentX, this.currentY);
   }
 
+  ////// Better implementation of below commented code is at the bottom.
+
+
   // listen to when click is left.
-  @HostListener('document:mouseup', ['$event'])
-  async onMouseUp() {
-    // lift the mouse first.
-    this.mouse_hold = false;
+  // @HostListener('document:mouseup', ['$event'])
+  // async onMouseUp() {
+  //   // lift the mouse first.
+  //   this.mouse_hold = false;
 
-    // console.log(this.Word);
+  //   // console.log(this.Word);
 
-    if (this.Word.length !== 0) {
-      //start the game timer.
-      if(this.timer_running === false) {
-        this.timer_running = true;
-        this.start();
-        this.attempted_first_word = true;
-      }
+  //   if (this.Word.length !== 0) {
+  //     //start the game timer.
+  //     if(this.timer_running === false) {
+  //       this.timer_running = true;
+  //       this.start();
+  //       this.attempted_first_word = true;
+  //     }
 
-      // make the url;
-      this.final_url = this.url_const + this.Word;
+  //     // make the url;
+  //     this.final_url = this.url_const + this.Word;
 
-      //call async http req. to set the array_length from the json data.
+  //     //call async http req. to set the array_length from the json data.
 
-      // console.log('sending', this.array_length);
+  //     // console.log('sending', this.array_length);
 
-      const url: string = this.final_url;
-      //check word from the dictonary.
-      const options = {
-        method: 'GET',
-      };
+  //     const url: string = this.final_url;
+  //     //check word from the dictonary.
+  //     const options = {
+  //       method: 'GET',
+  //     };
 
-      await fetch(url, options)
-        .then(response => response.json())
-        .then((data) => {
-          // console.log(data);
-          // console.log(data.length);
-          this.array_length = data.length;
-        })
-        .catch(err => console.error(err));
+  //     await fetch(url, options)
+  //       .then(response => response.json())
+  //       .then((data) => {
+  //         // console.log(data);
+  //         // console.log(data.length);
+  //         this.array_length = data.length;
+  //       })
+  //       .catch(err => console.error(err));
 
-      // console.log('receiving', this.array_length);
+  //     // console.log('receiving', this.array_length);
 
-      // check it the word formed is valid or not.
-      if (this.array_length !== undefined && this.array_length !== 0) {
-        for (let i = 0; i < this.CurrentWord.length; i++) {
-          this.CurrentWord[i].state = this.right;
-        }
+  //     // check it the word formed is valid or not.
+  //     if (this.array_length !== undefined && this.array_length !== 0) {
+  //       for (let i = 0; i < this.CurrentWord.length; i++) {
+  //         this.CurrentWord[i].state = this.right;
+  //       }
 
-        //generate new characters after 0.5sec.
-        setTimeout(() => {
-          for (let i = 0; i < this.CurrentWord.length; i++) {
-            let char: string = this.generate_char();
-            this.CurrentWord[i].state = this.not_selected;
-            this.CurrentWord[i].text = char;
-          }
+  //       //generate new characters after 0.5sec.
+  //       setTimeout(() => {
+  //         for (let i = 0; i < this.CurrentWord.length; i++) {
+  //           let char: string = this.generate_char();
+  //           this.CurrentWord[i].state = this.not_selected;
+  //           this.CurrentWord[i].text = char;
+  //         }
 
-          //add the score.
-          this.game_score += this.CurrentWord.length * this.CurrentWord.length;
-          this.score_updated = true;
-          setTimeout(() => {
-            this.score_updated = false;
-          }, 1500);
-          // console.log('score_updated', this.score_updated);
+  //         //add the score.
+  //         this.game_score += this.CurrentWord.length * this.CurrentWord.length;
+  //         this.score_updated = true;
+  //         setTimeout(() => {
+  //           this.score_updated = false;
+  //         }, 1500);
+  //         // console.log('score_updated', this.score_updated);
 
 
-          //reset the current word.
-          this.Word = '';
-          this.CurrentWord = [];
-          this.array_length = 0;
-        }, 500);
-      } else {
-        for (let i = 0; i < this.CurrentWord.length; i++) {
-          this.CurrentWord[i].state = this.wrong;
-        }
+  //         //reset the current word.
+  //         this.Word = '';
+  //         this.CurrentWord = [];
+  //         this.array_length = 0;
+  //       }, 500);
+  //     } else {
+  //       for (let i = 0; i < this.CurrentWord.length; i++) {
+  //         this.CurrentWord[i].state = this.wrong;
+  //       }
 
-        //reset the current word.
-        setTimeout(() => {
-          for (let i = 0; i < this.CurrentWord.length; i++) {
-            this.CurrentWord[i].state = this.not_selected;
-          }
-          this.Word = '';
-          this.CurrentWord = [];
-        }, 500);
-      }
-    }
-  }
+  //       //reset the current word.
+  //       setTimeout(() => {
+  //         for (let i = 0; i < this.CurrentWord.length; i++) {
+  //           this.CurrentWord[i].state = this.not_selected;
+  //         }
+  //         this.Word = '';
+  //         this.CurrentWord = [];
+  //       }, 500);
+  //     }
+  //   }
+  // }
 
   // change the lenght of time bar according to time.
   bar_length: number = 100;
@@ -387,6 +391,66 @@ export class WordComponent {
     else{
       this.desktop_type = true;
       // console.log('desktop');
+    }
+  }
+
+  @HostListener('document:mouseup', ['$event'])
+  onMouseUp() {
+    // lift the mouse first.
+    this.mouse_hold = false;
+
+    // console.log(this.Word);
+
+    if (this.Word.length !== 0) {
+      //start the game timer.
+      if(this.timer_running === false) {
+        this.timer_running = true;
+        this.start();
+        this.attempted_first_word = true;
+      }
+
+      // check it the word formed is valid or not.
+      if (word_list.includes(this.Word)) {
+        for (let i = 0; i < this.CurrentWord.length; i++) {
+          this.CurrentWord[i].state = this.right;
+        }
+
+        //generate new characters after 0.5sec.
+        setTimeout(() => {
+          for (let i = 0; i < this.CurrentWord.length; i++) {
+            let char: string = this.generate_char();
+            this.CurrentWord[i].state = this.not_selected;
+            this.CurrentWord[i].text = char;
+          }
+
+          //add the score.
+          this.game_score += this.CurrentWord.length * this.CurrentWord.length;
+          this.score_updated = true;
+          setTimeout(() => {
+            this.score_updated = false;
+          }, 1500);
+          // console.log('score_updated', this.score_updated);
+
+
+          //reset the current word.
+          this.Word = '';
+          this.CurrentWord = [];
+          this.array_length = 0;
+        }, 500);
+      } else {
+        for (let i = 0; i < this.CurrentWord.length; i++) {
+          this.CurrentWord[i].state = this.wrong;
+        }
+
+        //reset the current word.
+        setTimeout(() => {
+          for (let i = 0; i < this.CurrentWord.length; i++) {
+            this.CurrentWord[i].state = this.not_selected;
+          }
+          this.Word = '';
+          this.CurrentWord = [];
+        }, 500);
+      }
     }
   }
 
