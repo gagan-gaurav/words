@@ -20,7 +20,7 @@ RUN chmod 777 -R /usr/share/nginx/html
 COPY ./custom-nginx-file.conf /etc/nginx/conf.d/default.conf
 
 ## Expose the docker port
-EXPOSE 8080
+EXPOSE $PORT
 
 ## Initiate the NGINX
 CMD ["nginx", "-g", "daemon off;"]
