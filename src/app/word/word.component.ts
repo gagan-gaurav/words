@@ -76,6 +76,7 @@ export class WordComponent {
   box_id: number = 0;
 
   mouse_hold: boolean = false;
+  inside_grid: boolean = false;
 
   currentX: number = -1;
   currentY: number = -1;
@@ -148,6 +149,18 @@ export class WordComponent {
     // console.log(this.mouse_hold);
     this.mouse_hold = true;
     if (this.currentX != -1 || this.currentY != -1) this.mymethod_over(this.currentX, this.currentY);
+  }
+
+  //check if inside grid_container or not
+  grid_container_true(){
+    this.inside_grid = true;
+    // console.log(this.inside_grid);
+  }
+
+  grid_container_false(){
+    this.inside_grid = false;
+    this.resetWord();
+    // console.log(this.inside_grid);
   }
 
   ////// Better implementation of below commented code is at the bottom.
@@ -394,6 +407,21 @@ export class WordComponent {
     }
   }
 
+  resetWord(){
+    for (let i = 0; i < this.CurrentWord.length; i++) {
+      this.CurrentWord[i].state = this.wrong;
+    }
+
+    //reset the current word.
+    setTimeout(() => {
+      for (let i = 0; i < this.CurrentWord.length; i++) {
+        this.CurrentWord[i].state = this.not_selected;
+      }
+      this.Word = '';
+      this.CurrentWord = [];
+    }, 300);
+  }
+
   @HostListener('document:mouseup', ['$event'])
   onMouseUp() {
     // lift the mouse first.
@@ -410,7 +438,7 @@ export class WordComponent {
       }
 
       // check it the word formed is valid or not.
-      if (word_list.includes(this.Word)) {
+      if (word_list.includes(this.Word) && this.Word.length >= 3 && this.inside_grid === true) {
         for (let i = 0; i < this.CurrentWord.length; i++) {
           this.CurrentWord[i].state = this.right;
         }
@@ -438,18 +466,7 @@ export class WordComponent {
           this.array_length = 0;
         }, 500);
       } else {
-        for (let i = 0; i < this.CurrentWord.length; i++) {
-          this.CurrentWord[i].state = this.wrong;
-        }
-
-        //reset the current word.
-        setTimeout(() => {
-          for (let i = 0; i < this.CurrentWord.length; i++) {
-            this.CurrentWord[i].state = this.not_selected;
-          }
-          this.Word = '';
-          this.CurrentWord = [];
-        }, 500);
+        this.resetWord();
       }
     }
   }
